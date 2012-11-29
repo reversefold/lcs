@@ -1,8 +1,55 @@
-from util import print_table
+"""Longest Common Substring with variable codon length."""
 
+def lcs(a, b, cl=1, verbose=False):
+    r"""Longest Common Substring with variable codon length.
 
-def lcs(a, b, cl, verbose=False):
+    >>> print '%r\n%r\n%r' % lcs('aaa' * 10, 'aaa' * 10, 3)
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    10
+    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'abc' * 10, 3)
+    'abcabcabcabcabcabcabcabcabcabc'
+    'abcabcabcabcabcabcabcabcabcabc'
+    10
+    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'cba' * 10, 3)
+    '                              abcabcabcabcabcabcabcabcabcabc'
+    'cbacbacbacbacbacbacbacbacbacba                              '
+    0
+    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'cab' * 10, 3)
+    ' abcabcabcabcabcabcabcabcabc  abc'
+    'cabcabcabcabcabcabcabcabcabcab   '
+    9
+    >>> print '%r\n%r\n%r' % lcs('d' + ('abc' * 10), 'e' + ('abc' * 10), 3)
+    ' dabcabcabcabcabcabcabcabcabcabc'
+    'e abcabcabcabcabcabcabcabcabcabc'
+    10
+    >>> print '%r\n%r\n%r' % lcs(('abc' * 10) + 'd', ('abc' * 10) + 'e', 3)
+    'abcabcabcabcabcabcabcabcabcabc d'
+    'abcabcabcabcabcabcabcabcabcabce '
+    10
+    >>> print '%r\n%r\n%r' % lcs(('abc' * 10) + 'de', ('abc' * 10) + 'ed', 3)
+    'abcabcabcabcabcabcabcabcabcabc  de'
+    'abcabcabcabcabcabcabcabcabcabced  '
+    10
+    >>> print '%r\n%r\n%r' % lcs('e' + ('abc' * 10) + 'd', 'd' + ('abc' * 10) + 'e', 3)
+    ' eabcabcabcabcabcabcabcabcabcabc d'
+    'd abcabcabcabcabcabcabcabcabcabce '
+    10
+    >>> print '%r\n%r\n%r' % lcs('eee' + ('abc' * 10) + 'ddd', 'ddd' + ('abc' * 10) + 'eee', 3)
+    '   eeeabcabcabcabcabcabcabcabcabcabc   ddd'
+    'ddd   abcabcabcabcabcabcabcabcabcabceee   '
+    10
+    >>> print '%r\n%r\n%r' % lcs('eee' + ('abc' * 10) + 'ddd', 'ddd' + ('abc' * 5) + 'eee', 3)
+    '   eeeabcabcabcabcabc   abcabcabcabcabcddd'
+    'ddd   abcabcabcabcabceee                  '
+    5
+    >>> print '%r\n%r\n%r' % lcs('eee' + ('abc' * 5) + 'ddd', 'ddd' + ('abc' * 10) + 'eee', 3)
+    '   eeeabcabcabcabcabc                  ddd'
+    'ddd   abcabcabcabcabcabcabcabcabcabceee   '
+    5
+    """
     if verbose:
+        from util import print_table
         print a
         print b
     arr = [[0] * (len(b) + 1) for i in xrange(len(a) + 1)]
@@ -73,3 +120,8 @@ def lcs(a, b, cl, verbose=False):
         print ra
         print rb
     return (ra, rb, arr[len(a)][len(b)])
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()

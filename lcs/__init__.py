@@ -85,19 +85,17 @@ def lcs(input_a, input_b, codon_length=1, verbose=False):
                 if match_matrix[x + 1][y + 1] != match_matrix[x][y + 1] and match_matrix[x + 1][y + 1] != match_matrix[x + 1][y]:
                     matching_points[x + 1][y + 1] = 'x'
 
-    parr = match_matrix[:]
-    for i in xrange(len(parr)):
-        parr[i] = parr[i][:]
-    parr[0] = [''] + list(input_b)
 
     if verbose:
+        display_matrix = match_matrix[:]
+        for i in xrange(len(display_matrix)):
+            display_matrix[i] = display_matrix[i][:]
+        display_matrix[0] = [''] + list(input_b)
         matching_points[0] = [''] + list(input_b)
-    for x in xrange(len(input_a)):
-        parr[x + 1][0] = input_a[x]
-        if verbose:
+        for x in xrange(len(input_a)):
+            display_matrix[x + 1][0] = input_a[x]
             matching_points[x + 1][0] = input_a[x]
-    if verbose:
-        print_table(parr)
+        print_table(display_matrix)
         print_table(matching_points)
 
     x = len(input_a)

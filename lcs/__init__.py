@@ -1,67 +1,102 @@
 """Longest Common Substring with variable codon length."""
 
-def lcs(input_a, input_b, codon_length=1, verbose=False):
-    r"""Longest Common Substring with variable codon length.
 
-    >>> print '%r\n%r\n%r' % lcs('aaa' * 10, 'aaa' * 10)
+def lcs_string(input_a, input_b, codon_length=1, verbose=False):
+    r"""Longest Commong Substring with variable length codon that
+    assumes that input_a and input_b are strings. The returned values
+    are strings with spaces (' ') where there is no match. If the
+    input strings have spaces the algorithm will still run fine but
+    the output will be ambiguous.
+
+    >>> print '%r\n%r\n%r' % lcs_string('aaa' * 10, 'aaa' * 10)
     'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     30
-    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'abc' * 10)
+    >>> print '%r\n%r\n%r' % lcs_string('abc' * 10, 'abc' * 10)
     'abcabcabcabcabcabcabcabcabcabc'
     'abcabcabcabcabcabcabcabcabcabc'
     30
-    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'cba' * 10)
+    >>> print '%r\n%r\n%r' % lcs_string('abc' * 10, 'cba' * 10)
     '  a b c a b c a b c abcabcabcabcabcabcabc'
     'cbacbacbacbacbacbacba c b a c b a c b a  '
     19
-    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'cab' * 10)
+    >>> print '%r\n%r\n%r' % lcs_string('abc' * 10, 'cab' * 10)
     ' abcabcabcabcabcabcabcabcabcabc'
     'cabcabcabcabcabcabcabcabcabcab '
     29
-    >>> print '%r\n%r\n%r' % lcs('aaa' * 10, 'aaa' * 10, 3)
+    >>> print '%r\n%r\n%r' % lcs_string('aaa' * 10, 'aaa' * 10, 3)
     'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     10
-    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'abc' * 10, 3)
+    >>> print '%r\n%r\n%r' % lcs_string('abc' * 10, 'abc' * 10, 3)
     'abcabcabcabcabcabcabcabcabcabc'
     'abcabcabcabcabcabcabcabcabcabc'
     10
-    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'cba' * 10, 3)
+    >>> print '%r\n%r\n%r' % lcs_string('abc' * 10, 'cba' * 10, 3)
     '                              abcabcabcabcabcabcabcabcabcabc'
     'cbacbacbacbacbacbacbacbacbacba                              '
     0
-    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'cab' * 10, 3)
+    >>> print '%r\n%r\n%r' % lcs_string('abc' * 10, 'cab' * 10, 3)
     ' abcabcabcabcabcabcabcabcabc  abc'
     'cabcabcabcabcabcabcabcabcabcab   '
     9
-    >>> print '%r\n%r\n%r' % lcs('d' + ('abc' * 10), 'e' + ('abc' * 10), 3)
+    >>> print '%r\n%r\n%r' % lcs_string('d' + ('abc' * 10), 'e' + ('abc' * 10), 3)
     ' dabcabcabcabcabcabcabcabcabcabc'
     'e abcabcabcabcabcabcabcabcabcabc'
     10
-    >>> print '%r\n%r\n%r' % lcs(('abc' * 10) + 'd', ('abc' * 10) + 'e', 3)
+    >>> print '%r\n%r\n%r' % lcs_string(('abc' * 10) + 'd', ('abc' * 10) + 'e', 3)
     'abcabcabcabcabcabcabcabcabcabc d'
     'abcabcabcabcabcabcabcabcabcabce '
     10
-    >>> print '%r\n%r\n%r' % lcs(('abc' * 10) + 'de', ('abc' * 10) + 'ed', 3)
+    >>> print '%r\n%r\n%r' % lcs_string(('abc' * 10) + 'de', ('abc' * 10) + 'ed', 3)
     'abcabcabcabcabcabcabcabcabcabc  de'
     'abcabcabcabcabcabcabcabcabcabced  '
     10
-    >>> print '%r\n%r\n%r' % lcs('e' + ('abc' * 10) + 'd', 'd' + ('abc' * 10) + 'e', 3)
+    >>> print '%r\n%r\n%r' % lcs_string('e' + ('abc' * 10) + 'd', 'd' + ('abc' * 10) + 'e', 3)
     ' eabcabcabcabcabcabcabcabcabcabc d'
     'd abcabcabcabcabcabcabcabcabcabce '
     10
-    >>> print '%r\n%r\n%r' % lcs('eee' + ('abc' * 10) + 'ddd', 'ddd' + ('abc' * 10) + 'eee', 3)
+    >>> print '%r\n%r\n%r' % lcs_string('eee' + ('abc' * 10) + 'ddd', 'ddd' + ('abc' * 10) + 'eee', 3)
     '   eeeabcabcabcabcabcabcabcabcabcabc   ddd'
     'ddd   abcabcabcabcabcabcabcabcabcabceee   '
     10
-    >>> print '%r\n%r\n%r' % lcs('eee' + ('abc' * 10) + 'ddd', 'ddd' + ('abc' * 5) + 'eee', 3)
+    >>> print '%r\n%r\n%r' % lcs_string('eee' + ('abc' * 10) + 'ddd', 'ddd' + ('abc' * 5) + 'eee', 3)
     '   eeeabcabcabcabcabc   abcabcabcabcabcddd'
     'ddd   abcabcabcabcabceee                  '
     5
-    >>> print '%r\n%r\n%r' % lcs('eee' + ('abc' * 5) + 'ddd', 'ddd' + ('abc' * 10) + 'eee', 3)
+    >>> print '%r\n%r\n%r' % lcs_string('eee' + ('abc' * 5) + 'ddd', 'ddd' + ('abc' * 10) + 'eee', 3)
     '   eeeabcabcabcabcabc                  ddd'
     'ddd   abcabcabcabcabcabcabcabcabcabceee   '
+    5
+    """
+    result = lcs(input_a, input_b, codon_length, verbose)
+    return (''.join(' ' if c is None else c for c in result[0]),
+            ''.join(' ' if c is None else c for c in result[1]),
+            result[2])
+
+
+def lcs(input_a, input_b, codon_length=1, verbose=False):
+    r"""Longest Common Substring with variable codon length.
+
+    >>> print '%r\n%r\n%r' % lcs((0, 1, 2) * 3, (2, 0, 1) * 3)
+    [None, 0, 1, 2, 0, 1, 2, 0, 1, 2]
+    [2, 0, 1, 2, 0, 1, 2, 0, 1, None]
+    8
+    >>> print '%r\n%r\n%r' % lcs((0, 1, 2) * 3, (2, 0, 1) * 3, 3)
+    [None, 0, 1, 2, 0, 1, 2, None, None, 0, 1, 2]
+    [2, 0, 1, 2, 0, 1, 2, 0, 1, None, None, None]
+    2
+    >>> print '%r\n%r\n%r' % lcs((0, 1, 2) * 3, (0, 1, 2) * 3, 3)
+    [0, 1, 2, 0, 1, 2, 0, 1, 2]
+    [0, 1, 2, 0, 1, 2, 0, 1, 2]
+    3
+    >>> print '%r\n%r\n%r' % lcs((0, 1, 2) * 3, (0, 1, 2) * 3)
+    [0, 1, 2, 0, 1, 2, 0, 1, 2]
+    [0, 1, 2, 0, 1, 2, 0, 1, 2]
+    9
+    >>> print '%r\n%r\n%r' % lcs((0, 1, 2) * 3, (2, 1, 0) * 3)
+    [None, None, 0, None, 1, None, 2, 0, 1, 2, 0, 1, 2]
+    [2, 1, 0, 2, 1, 0, 2, None, 1, None, 0, None, None]
     5
     """
 
@@ -100,39 +135,43 @@ def lcs(input_a, input_b, codon_length=1, verbose=False):
 
     x = len(input_a)
     y = len(input_b)
-    ra = []
-    rb = []
+    result_a = []
+    result_b = []
 
     while x > codon_length_less_1 and y > codon_length_less_1:
         if match_matrix[x][y] == match_matrix[x - 1][y]:
             x -= 1
-            ra.append(input_a[x])
-            rb.append(' ')
+            result_a.append(input_a[x])
+            result_b.append(None)
         elif match_matrix[x][y] == match_matrix[x][y - 1]:
             y -= 1
-            ra.append(' ')
-            rb.append(input_b[y])
+            result_a.append(None)
+            result_b.append(input_b[y])
         else:
             x -= codon_length
             y -= codon_length
-            ra.extend(reversed(input_a[x:x + codon_length]))
-            rb.extend(reversed(input_b[y:y + codon_length]))
+            result_a.extend(reversed(input_a[x:x + codon_length]))
+            result_b.extend(reversed(input_b[y:y + codon_length]))
     while x > 0:
         x -= 1
-        ra.append(input_a[x])
-        rb.append(' ')
+        result_a.append(input_a[x])
+        result_b.append(None)
     while y > 0:
         y -= 1
-        ra.append(' ')
-        rb.append(input_b[y])
-    ra.reverse()
-    rb.reverse()
-    ra = ''.join(ra)
-    rb = ''.join(rb)
+        result_a.append(None)
+        result_b.append(input_b[y])
+    result_a.reverse()
+    result_b.reverse()
     if verbose:
-        print ra
-        print rb
-    return (ra, rb, match_matrix[len(input_a)][len(input_b)])
+        if isinstance(input_a, str):
+            print ''.join(' ' if c is None else c for c in result_a)
+        else:
+            print result_a
+        if isinstance(input_b, str):
+            print ''.join(' ' if c is None else c for c in result_b)
+        else:
+            print result_b
+    return (result_a, result_b, match_matrix[len(input_a)][len(input_b)])
 
 
 if __name__ == '__main__':

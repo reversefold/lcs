@@ -1,8 +1,24 @@
 """Longest Common Substring with variable codon length."""
 
-def lcs(a, b, cl=1, verbose=False):
+def lcs(input_a, input_b, codon_length=1, verbose=False):
     r"""Longest Common Substring with variable codon length.
 
+    >>> print '%r\n%r\n%r' % lcs('aaa' * 10, 'aaa' * 10)
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    30
+    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'abc' * 10)
+    'abcabcabcabcabcabcabcabcabcabc'
+    'abcabcabcabcabcabcabcabcabcabc'
+    30
+    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'cba' * 10)
+    '  a b c a b c a b c abcabcabcabcabcabcabc'
+    'cbacbacbacbacbacbacba c b a c b a c b a  '
+    19
+    >>> print '%r\n%r\n%r' % lcs('abc' * 10, 'cab' * 10)
+    ' abcabcabcabcabcabcabcabcabcabc'
+    'cabcabcabcabcabcabcabcabcabcab '
+    29
     >>> print '%r\n%r\n%r' % lcs('aaa' * 10, 'aaa' * 10, 3)
     'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
@@ -48,57 +64,69 @@ def lcs(a, b, cl=1, verbose=False):
     'ddd   abcabcabcabcabcabcabcabcabcabceee   '
     5
     """
+
     if verbose:
         from util import print_table
-        print a
-        print b
-    arr = [[0] * (len(b) + 1) for i in xrange(len(a) + 1)]
-    arr2 = [[''] * (len(b) + 1) for i in xrange(len(a) + 1)]
-    for x in xrange(cl - 1, len(a)):
-        for y in xrange(cl - 1, len(b)):
-            arr[x + 1][y + 1] = max(
-                (1 if a[x - (cl - 1):x + 1] == b[y - (cl - 1):y + 1] else 0) + arr[x - (cl - 1)][y - (cl - 1)],
-                arr[x][y + 1],
-                arr[x + 1][y])
-            if arr[x + 1][y + 1] != arr[x][y + 1] and arr[x + 1][y + 1] != arr[x + 1][y]:
-                arr2[x + 1][y + 1] = 'x'
-    parr = arr[:]
-    parr[0] = [''] + list(b)
-    arr2[0] = [''] + list(b)
-    for x in xrange(len(a)):
-        arr[x + 1][0] = a[x]
-        arr2[x + 1][0] = a[x]
+        print input_a
+        print input_b
+    match_matrix = [[0] * (len(input_b) + 1) for i in xrange(len(input_a) + 1)]
+    if verbose:
+        matching_points = [[''] * (len(input_b) + 1) for i in xrange(len(input_a) + 1)]
+    codon_length_less_1 = codon_length - 1
+    for x in xrange(codon_length - 1, len(input_a)):
+        for y in xrange(codon_length - 1, len(input_b)):
+            match_matrix[x + 1][y + 1] = max(
+                ((1 if input_a[x - codon_length_less_1:x + 1] == input_b[y - codon_length_less_1:y + 1]
+                  else 0)
+                 + match_matrix[x - codon_length_less_1][y - codon_length_less_1]),
+                match_matrix[x][y + 1],
+                match_matrix[x + 1][y])
+            if verbose:
+                if match_matrix[x + 1][y + 1] != match_matrix[x][y + 1] and match_matrix[x + 1][y + 1] != match_matrix[x + 1][y]:
+                    matching_points[x + 1][y + 1] = 'x'
+
+    parr = match_matrix[:]
+    for i in xrange(len(parr)):
+        parr[i] = parr[i][:]
+    parr[0] = [''] + list(input_b)
+
+    if verbose:
+        matching_points[0] = [''] + list(input_b)
+    for x in xrange(len(input_a)):
+        parr[x + 1][0] = input_a[x]
+        if verbose:
+            matching_points[x + 1][0] = input_a[x]
     if verbose:
         print_table(parr)
-        print_table(arr2)
+        print_table(matching_points)
 
-    x = len(a)
-    y = len(b)
+    x = len(input_a)
+    y = len(input_b)
     ra = []
     rb = []
 
-    while x > (cl - 1) and y > (cl - 1):
-        if arr[x][y] == arr[x - 1][y]:
+    while x > codon_length_less_1 and y > codon_length_less_1:
+        if match_matrix[x][y] == match_matrix[x - 1][y]:
             x -= 1
-            ra.append(a[x])
+            ra.append(input_a[x])
             rb.append(' ')
-        elif arr[x][y] == arr[x][y - 1]:
+        elif match_matrix[x][y] == match_matrix[x][y - 1]:
             y -= 1
             ra.append(' ')
-            rb.append(b[y])
+            rb.append(input_b[y])
         else:
-            x -= cl
-            y -= cl
-            ra.extend(reversed(a[x:x + cl]))
-            rb.extend(reversed(b[y:y + cl]))
+            x -= codon_length
+            y -= codon_length
+            ra.extend(reversed(input_a[x:x + codon_length]))
+            rb.extend(reversed(input_b[y:y + codon_length]))
     while x > 0:
         x -= 1
-        ra.append(a[x])
+        ra.append(input_a[x])
         rb.append(' ')
     while y > 0:
         y -= 1
         ra.append(' ')
-        rb.append(b[y])
+        rb.append(input_b[y])
     ra.reverse()
     rb.reverse()
     ra = ''.join(ra)
@@ -106,7 +134,7 @@ def lcs(a, b, cl=1, verbose=False):
     if verbose:
         print ra
         print rb
-    return (ra, rb, arr[len(a)][len(b)])
+    return (ra, rb, match_matrix[len(input_a)][len(input_b)])
 
 
 if __name__ == '__main__':

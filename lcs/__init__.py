@@ -54,19 +54,14 @@ def lcs(a, b, cl=1, verbose=False):
         print b
     arr = [[0] * (len(b) + 1) for i in xrange(len(a) + 1)]
     arr2 = [[''] * (len(b) + 1) for i in xrange(len(a) + 1)]
-#    maxcoord = (0, (0, 0))
     for x in xrange(cl - 1, len(a)):
         for y in xrange(cl - 1, len(b)):
             arr[x + 1][y + 1] = max(
                 (1 if a[x - (cl - 1):x + 1] == b[y - (cl - 1):y + 1] else 0) + arr[x - (cl - 1)][y - (cl - 1)],
-                arr[x][y + 1], #arr[x - (cl - 1)][y + 1],
-                arr[x + 1][y]) #arr[x + 1][y - (cl - 1)])
-#            if arr[x + 1][y + 1] > maxcoord[0]:
-#                maxcoord = (arr[x + 1][y + 1], (x + 1, y + 1))
-#            if arr[x + 1][y + 1] != arr[x - (cl - 1)][y + 1] and arr[x + 1][y + 1] != arr[x + 1][y - (cl - 1)]:
+                arr[x][y + 1],
+                arr[x + 1][y])
             if arr[x + 1][y + 1] != arr[x][y + 1] and arr[x + 1][y + 1] != arr[x + 1][y]:
                 arr2[x + 1][y + 1] = 'x'
-#            print x, y, a[x], b[y], arr[x][y], arr[x + 1][y + 1]
     parr = arr[:]
     parr[0] = [''] + list(b)
     arr2[0] = [''] + list(b)
@@ -81,14 +76,6 @@ def lcs(a, b, cl=1, verbose=False):
     y = len(b)
     ra = []
     rb = []
-#    while x > maxcoord[1][0]:
-#        x -= 1
-#        ra.append(a[x])
-#        rb.append(' ')
-#    while y > maxcoord[1][1]:
-#        y -= 1
-#        ra.append(' ')
-#        rb.append(b[y])
 
     while x > (cl - 1) and y > (cl - 1):
         if arr[x][y] == arr[x - 1][y]:

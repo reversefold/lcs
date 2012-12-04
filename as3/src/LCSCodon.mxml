@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:local="*" xmlns:lcs="com.reversefold.lcs.*">
+	<s:width>100%</s:width>
+	<s:height>100%</s:height>
+	<s:frameRate>100</s:frameRate>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/halo";
+		
+		@font-face {
+			src: url("../assets/SourceCodePro-Regular.otf");
+			font-family: "Source Code Pro";
+			embedAsCFF: true;
+		}
+		
+		.active {
+			color: white;
+			content-background-color: #993333;
+		}
+		
+		.activeHeader {
+			color: white;
+			content-background-color: #339933;
+		}
+		
+		.previouslyActive {
+			color: white;
+			content-background-color: #333399;
+		}
+		
+		.monospace, s|RichText, s|TextInput {
+			font-family: "Source Code Pro";
+			font-size: 12px;
+		}
+	</fx:Style>
+	<s:Scroller left="0" right="0" top="0" bottom="0">
+		<s:Group>
+			<s:layout>
+				<s:VerticalLayout/>
+			</s:layout>
+			
+			<lcs:LCSCodonDisplay/>
+		</s:Group>
+	</s:Scroller>
+</s:Application>

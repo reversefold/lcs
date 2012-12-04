@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/halo">
+	<s:width>30</s:width>
+	<s:height>15</s:height>
+	<fx:Declarations>
+		<fx:String id="text"/>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			override protected function updateDisplayList(unscaledWidth : Number, unscaledHeight : Number) : void {
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				graphics.clear();
+				graphics.beginFill(getStyle("contentBackgroundColor"));
+				graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
+				graphics.endFill();
+				
+				graphics.lineStyle(1, 0xAAAAAA);
+				if (getStyle("leftBorder") === true) {
+					graphics.moveTo(0, 0);
+					graphics.lineTo(0, height);
+				}
+
+				if (getStyle("topBorder") === true) {
+					graphics.moveTo(0, 0);
+					graphics.lineTo(width, 0);
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:RichText id="textDisplay" text="{text}" x="{width / 2 - textDisplay.width / 2}" y="{height / 2 - textDisplay.height / 2}"/>
+</s:Group>

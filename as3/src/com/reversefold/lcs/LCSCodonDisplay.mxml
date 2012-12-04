@@ -28,6 +28,7 @@
 			import spark.layouts.VerticalLayout;
 			
 			public static const ARRAY_LENGTH : uint = 30;
+			public static const CODON_LENGTH : uint = 3;
 			public static const FRAMES_PER_TICK : uint = 1;
 			private static const DEFAULT_TICKS_PER_FRAME : uint = 1;
 			public static var TICKS_PER_FRAME : uint = DEFAULT_TICKS_PER_FRAME;
@@ -140,7 +141,11 @@
 
 				_array0 = $str1.split("");
 				_array1 = $str2.split("");
-				
+
+				recreate();
+			}
+			
+			private function recreate() : void {
 				matrixRows.removeAllElements();
 				output0.text = "";
 				output1.text = "";
@@ -156,7 +161,7 @@
 					row.addElement(cell);
 				}
 				matrixRows.addElement(row);
-				for (i = 0; i < _array0.length; ++i) {
+				for (var i : uint = 0; i < _array0.length; ++i) {
 					row = new Group();
 					row.layout = new HorizontalLayout();
 					HorizontalLayout(row.layout).gap = 0;
@@ -170,10 +175,12 @@
 						row.addElement(cell);
 					}
 				}
-				var compareFunc : Function = function(in1 : String, in2 : String) : Boolean {
-					return in1 == in2;
-				};
-				_lcsfsm = new LCSFSM(_array0, _array1, 3);
+
+				if (_lcsfsm != null) {
+					_lcsfsm.removeEventListener("resultIndexesChanged", redisplayOutput);
+					_lcsfsm.removeEventListener("stateChanged", atNextStep);
+				}
+				_lcsfsm = new LCSFSM(_array0, _array1, int(codonLength.text));
 				_lcsfsm.addEventListener("resultIndexesChanged", redisplayOutput);
 			}
 			
@@ -268,6 +275,14 @@
 					<s:RichText text="{_lcsfsm.idx_b}"/>
 					<s:RichText text="Length"/>
 					<s:TextInput id="stringLength" restrict="0-9" text="{ARRAY_LENGTH}"/>
+					<s:RichText text="Codon Length"/>
+					<s:TextInput id="codonLength" restrict="0-9" text="{CODON_LENGTH}">
+						<s:focusOut>
+							<![CDATA[
+								recreate();
+							]]>
+						</s:focusOut>
+					</s:TextInput>
 					<s:Button label="Re-Randomize" click="test()"/>
 					<s:Button label="Repeating" click="test('repeat')"/>
 					<s:Button label="Monotone" click="test('monotone')"/>

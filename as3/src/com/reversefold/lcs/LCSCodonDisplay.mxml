@@ -59,9 +59,11 @@
 					return;
 				}
 				_frames = 0;
-				for (var i : uint = 0; i < TICKS_PER_FRAME; ++i) {
-					if (_go) {
-						_go = (_lcsfsm.next() != null);
+				var i : uint = 0;
+				while (_go && i < TICKS_PER_FRAME) {
+					++i;
+					if (_lcsfsm.next() == null) {
+						_go = false;
 					}
 				}
 				updateMatrix();

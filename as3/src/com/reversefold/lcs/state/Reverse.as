@@ -10,7 +10,7 @@ package com.reversefold.lcs.state {
 			lcs.idx_b = lcs.input_b.length;
         }
 		
-		override public function next() : Boolean {
+		override public function next() : LCSState {
 			if (lcs.match_matrix[lcs.idx_a][lcs.idx_b] == lcs.match_matrix[lcs.idx_a - 1][lcs.idx_b]) {
 				lcs.idx_a -= 1;
 				lcs.result_a.unshift(lcs.input_a[lcs.idx_a]);
@@ -31,20 +31,13 @@ package com.reversefold.lcs.state {
 				}
 			}
 			
-			if (lcs.idx_a <= lcs.codon_length_less_1 || lcs.idx_b <= lcs.codon_length_less_1) {
-				_done = true;
-			}
 			lcs.dispatchEvent(new Event("resultAChanged"));
 			lcs.dispatchEvent(new Event("resultBChanged"));
 			lcs.dispatchEvent(new Event("resultIndexesChanged"));
-			return !_done;
-		}
-		
-		override public function nextState() : LCSState {
-			if (!done) {
-				throw new Error("Not done");
+			if (lcs.idx_a <= lcs.codon_length_less_1 || lcs.idx_b <= lcs.codon_length_less_1) {
+				return new CleanupA(lcs);
 			}
-			return new CleanupA(lcs);
+			return this;
 		}
     }
 }

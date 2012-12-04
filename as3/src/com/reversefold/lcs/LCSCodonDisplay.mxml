@@ -61,7 +61,7 @@
 				_frames = 0;
 				for (var i : uint = 0; i < TICKS_PER_FRAME; ++i) {
 					if (_go) {
-						_go = _lcsfsm.next();
+						_go = (_lcsfsm.next() != null);
 					}
 				}
 				updateMatrix();

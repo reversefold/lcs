@@ -11,7 +11,7 @@ package com.reversefold.lcs.state {
 			lcs.idx_b = lcs.codon_length - 1;
         }
 		
-		override public function next() : Boolean {
+		override public function next() : LCSState {
 			lcs.match_matrix[lcs.idx_a + 1][lcs.idx_b + 1] = Math.max(
 				((LCS.arrays_equal(
 					lcs.input_a.slice(lcs.idx_a - lcs.codon_length_less_1, lcs.idx_a + 1),
@@ -32,7 +32,6 @@ package com.reversefold.lcs.state {
 			if (lcs.idx_b == lcs.input_b.length) {
 				++lcs.idx_a;
 				if (lcs.idx_a == lcs.input_a.length) {
-					_done = true;
 					lcs.display_matrix.splice.apply(lcs.display_matrix, [0, 0].concat(lcs.match_matrix)); 
 					var i : uint;
 					for (i = 0; i < lcs.display_matrix.length; ++i) {
@@ -47,20 +46,15 @@ package com.reversefold.lcs.state {
 					}
 					LCS.print_table(lcs.display_matrix);
 					LCS.print_table(lcs.matching_points);
+					lcs.dispatchEvent(new Event("matchMatrixChanged"));
 					lcs.dispatchEvent(new Event("matchingPointsChanged"));
+					return new Reverse(lcs);
 				} else {
 					lcs.idx_b = lcs.codon_length - 1;
 				}
 			}
 			lcs.dispatchEvent(new Event("matchMatrixChanged"));
-			return !_done;
-		}
-		
-		override public function nextState() : LCSState {
-			if (!done) {
-				throw new Error("Not done yet");
-			}
-			return new Reverse(lcs);
+			return this;
 		}
     }
 }

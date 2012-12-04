@@ -3,9 +3,8 @@ package com.reversefold.lcs {
 	import com.reversefold.lcs.state.LCSState;
 	
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 
-    public class LCSFSM extends EventDispatcher {
+    public class LCSFSM extends LCSState {
 		[Bindable]
 		public var numberOfTicks : uint = 0;
 		
@@ -83,6 +82,7 @@ package com.reversefold.lcs {
 		public var idx_b : uint;
 		
         public function LCSFSM(input_a : Array, input_b : Array, codon_length : uint) : void {
+			super(this);
 			_input_a = input_a;
 			_input_b = input_b;
 			trace(_input_a);
@@ -100,13 +100,14 @@ package com.reversefold.lcs {
 			_state = new Forward(this);
 		}
 		
-		public function next() : Boolean {
+		override public function next() : LCSState {
 			if (_state == null) {
 				throw new Error("Finished (StopIteration)");
 			}
 			++numberOfTicks;
-			if (!_state.next()) {
-				_state = _state.nextState();
+			var oldState : LCSState = _state;
+			_state = _state.next();
+			if (_state != oldState) {
 				dispatchEvent(new Event("stateChanged"));
 			}
 			if (state == null) {
@@ -127,14 +128,14 @@ package com.reversefold.lcs {
 				trace("'" + p_a.join("") + "'");
 				trace("'" + p_b.join("") + "'");
 				_result = [result_a, result_b, _match_matrix[_input_a.length][_input_b.length]];
-				return false;
+				return null;
 			} else {
-				return true;
+				return this;
 			}
 		}
 		
 		public function run() : void {
-			while (next()) {}
+			while (next() != null) {}
 		}
     }
 }

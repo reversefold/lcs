@@ -29,7 +29,7 @@
 			
 			public static const ARRAY_LENGTH : uint = 30;
 			public static const FRAMES_PER_TICK : uint = 1;
-			private static const DEFAULT_TICKS_PER_FRAME : uint = 10;
+			private static const DEFAULT_TICKS_PER_FRAME : uint = 1;
 			public static var TICKS_PER_FRAME : uint = DEFAULT_TICKS_PER_FRAME;
 			
 			[Bindable]

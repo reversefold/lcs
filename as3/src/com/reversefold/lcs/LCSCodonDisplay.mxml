@@ -261,7 +261,7 @@
 					</s:layout>
 					<s:RichText text="{_frames}"/>
 					<s:RichText text="{_lcsfsm.numberOfTicks}"/>
-					<s:RichText text="{getQualifiedClassName(_lcsfsm.state)}"/>
+					<s:RichText text="{_lcsfsm.state == null ? 'Finished' : getQualifiedClassName(_lcsfsm.state).split('::')[1]}"/>
 					<s:RichText text="{_lcsfsm.idx_a}"/>
 					<s:RichText text="{_lcsfsm.idx_b}"/>
 					<s:RichText text="Length"/>
